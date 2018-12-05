@@ -1,29 +1,39 @@
+#' Classic Screeplot
 #'
+#' This function constructs a screeplot based on either the eigenvalues, percentage of variance or the cummulative percentage of variance.
+#' this can be done by adjusting the type variable.
+#' @param model The PCA model from FactoMineR.
+#' @param type The type of model. This can be one of three: "eig", "pov" or "cpov". Defaults to "cpov".
 #'
-#'
-#' @import ggrepel
 #' @export
-pca_biplot <- function(model) {
+pca_scree <- function(model, type = "cpov") {
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
-
+  data <- tibble(
+    eig = model$eig[, 1],
+    pov = model$eig[, 2],
+    cpov = model$eig[, 3],
+    PC = seq_len(nrow(model$eig))
+  )
+  ggplot(data, aes(PC, data[[type]])) +
+    geom_point() +
+    geom_line() +
+    theme_dynge() +
+    ylab(type)
 }
 
+#' Quality of Representation
 #'
-#'
-#'
-#'
+#' This function plot the different attributes of your PCA model and
+#' their respective quality of representation to the different principal components.
+#' @param model The PCA model from FactoMineR.
+#' @param labels Boolean indicating if values should be plotted or not. Defaults to TRUE.
+#' @return
+#' \item{data}{The data used to make the plot.}
+#' \item{plot}{The ggplot object.}
 #' @export
-pca_scree <- function(model, type = c("eig", "var", "cvar")) {
-
-}
-
-#'
-#'
-#'
-#' @export
-pca_QoR <- function(model) {
+pca_QoR <- function(model, labels = TRUE) {
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
@@ -31,8 +41,18 @@ pca_QoR <- function(model) {
   data <- as.tibble(model$var$cos2)
   data$Variable <- rownames(model$var$coord)
   data <- gather(data, key = Dimension, value = QoR, -Variable)
+  if (labels) {
+    labeling <- function() {
+      geom_text(aes(label = round(QoR, 1)))
+    }
+  } else {
+    labeling <- function() {
+
+    }
+  }
   plot <- ggplot(data, aes(Dimension, Variable)) +
-    geom_tile(aes(fill = QoR), color = "black") +
+    geom_tile(aes(fill = QoR), color = "grey25") +
+    labeling() +
     theme_dynge() +
     scale_fill_continuous(
       low = brewer.pal(3, "Blues")[1],
@@ -40,31 +60,88 @@ pca_QoR <- function(model) {
       limits = c(0, 1),
       breaks = seq(0, 1, .25)
     )
-  plot
   return(list(data = data, plot = plot))
 }
 
+#' Loadings Circle
 #'
-#'
-#'
+#' This function creates a unity circle aswell as the correlations between the original
+#' variables and the principal components of your PCA model. You can choose which dimensions to plot,
+#' aswell as the threshold for correlations to be shown.
+#' @param model The PCA model from FactoMineR.
+#' @param dim The dimensions to be plotted. Defaults to c(1,2).
+#' @param min_cor The minimal correlation value to plot arrow. Defaults to .3.
 #' @import ggrepel
 #' @export
-pca_loading_circle <- function(model) {
+pca_loading_circle <- function(model,
+                               dim = c(1, 2),
+                               min_cor = .3) {
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
+  loadings <- as.tibble(model$var$coord)
+  loadings$Variable <- rownames(model$var$coord)
+  loadings <- loadings %>%
+    filter(abs(loadings[[dim[1]]]) > min_cor |
+             abs(loadings[[dim[2]]]) > min_cor)
+
+  circleFun <- function(center = c(0, 0),
+                        radius = 1,
+                        npoints = 100) {
+    tt <- seq(0, 2 * pi, length.out = npoints)
+    xx <- center[1] + radius * cos(tt)
+    yy <- center[2] + radius * sin(tt)
+    return(tibble(x = xx, y = yy))
+  }
+  circle_data <- circleFun()
+  plot <- ggplot(loadings, aes(loadings[[dim[1]]],
+                               loadings[[dim[2]]])) +
+    geom_path(data = circle_data, aes(x, y), col = "grey80") +
+    geom_hline(yintercept = 0,
+               col = "grey80",
+               lty = "dotted") +
+    geom_vline(xintercept = 0,
+               col = "grey80",
+               lty = "dotted") +
+    geom_segment(
+      aes(
+        x = 0,
+        y = 0,
+        xend = loadings[[dim[1]]],
+        yend = loadings[[dim[2]]]
+      ),
+      col = "grey60",
+      arrow = arrow(length = unit(.25, "cm"), type = "closed")
+    ) +
+    ggrepel::geom_text_repel(aes(label = Variable),
+                             col = "grey60") +
+    theme_dynge() +
+    labs(
+      x = paste("Dimension ", dim[1], " (", round(model$eig[dim[1], 2], 1), "%)", sep = ""),
+      y = paste("Dimension ", dim[2], " (", round(model$eig[dim[2], 2], 1), "%)", sep = "")
+    )
+  return(list(data = loadings, plot = plot))
 
 
 }
 
+#' Biplot of a PCA model
 #'
+#' This function creates a biplot of the PCA model. You can adjust which dimensions to plot,
+#' aswell as the threshold for correlations to be shown. You can also forego the correlation arrows with biplot = FALSE.
 #'
-#'
+#' @param model The PCA model from FactoMineR.
+#' @param point_id A vector of labels to the individual points. Ignore this if you do not want labels.
+#' @param dim The dimensions to be plotted. Defaults to c(1,2).
+#' @param min_cor The minimal correlation value to plot arrow. Defaults to .3.
+#' @param biplot A boolean for whether or not to produce a biplot and therefore add correlation arrows. Defaults to TRUE
 #' @import ggrepel
 #' @export
-pca_scatter <- function(model,
-                        point_id = NULL,
-                        dim = c(1, 2)) {
+pca_biplot <- function(model,
+                       point_id = NULL,
+                       dim = c(1, 2),
+                       min_cor = .3,
+                       biplot = TRUE) {
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
@@ -102,16 +179,59 @@ pca_scatter <- function(model,
 
     }
   }
-  ggplot(data, aes(data[[dim[1]]] , data[[dim[2]]])) +
+  if (biplot) {
+    loadings <- as.tibble(model$var$coord)
+    loadings$Variable <- rownames(model$var$coord)
+    loadings <- loadings %>%
+      filter(abs(loadings[[dim[1]]]) > min_cor |
+               abs(loadings[[dim[2]]]) > min_cor)
+    loading_arrow <- function() {
+      list(
+        geom_segment(
+          data = loadings,
+          aes(
+            x = 0,
+            y = 0,
+            xend = loadings[[dim[1]]],
+            yend = loadings[[dim[2]]]
+          ),
+          col = "grey60",
+          arrow = arrow(length = unit(.15, "cm"), type = "closed")
+        ),
+        geom_text_repel(
+          data = loadings,
+          aes(loadings[[dim[1]]],
+              loadings[[dim[2]]],
+              label = Variable),
+          col = "grey60"
+        )
+      )
+
+    }
+  } else {
+    loading_arrow <- function() {
+
+    }
+  }
+  plot <- ggplot(data, aes(data[[dim[1]]] , data[[dim[2]]])) +
     geom_hline(yintercept = 0,
                col = "grey80",
                lty = "dotted") +
     geom_vline(xintercept = 0,
                col = "grey80",
                lty = "dotted") +
+    loading_arrow() +
     geom_point() +
     text_id() +
     theme_dynge() +
-    labs(x = colnames(data)[dim[1]], y = colnames(data)[dim[2]])
+    labs(
+      x = paste("Dimension ", dim[1], " (", round(model$eig[dim[1], 2], 1), "%)", sep = ""),
+      y = paste("Dimension ", dim[2], " (", round(model$eig[dim[2], 2], 1), "%)", sep = "")
+    )
+  return(list(
+    ind = data,
+    loadings = loadings,
+    plot = plot
+  ))
 
 }
