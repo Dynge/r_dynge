@@ -23,7 +23,7 @@ corr_matrix <-
       class(data) == "data.frame" |
       class(data) == "tbl_df"
     )))
-      return("Must enter a dataset")
+      stop("Must enter a dataset")
 
     CorrData <- round(cor(data, method = type), 2)
 

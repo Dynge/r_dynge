@@ -1,20 +1,23 @@
 #' A QQ plot
 #'
+#' Produces a QQ plot of your data with either normal or t-distributed quantiles.
 #'
 #' @param data The dataset only containing the data coloumns correlations between.
-#' @param type
-#' @param df
-#' @param ylabel
-#' @param xlabel
-#' @keywords
+#' @param type The type of quantiles. Either "normal" or "t" distributed.
+#' @param ylabel The label for the x axis.
+#' @param xlabel The label for the y axis.
+#' @return
+#' \item{data}{A dataset containing the correlational values aswell as their respective p-values.}
+#' \item{plot}{A ggplot object of the plot.}
 #' @examples
+#' data(mtcars)
+#' qqplot(mtcars$mpg)
 #' @import tidyverse
 #' @export
 qqplot <- function(data = NULL,
                         type = "normal",
-                        df = NULL,
                         ylabel = "Observed Values",
-                        xlabel = "Theoretical Normality Quantiles") {
+                        xlabel = "Theoretical Quantiles") {
 
   if ((TRUE %in% (
     class(data) == "tbl" |
@@ -25,7 +28,7 @@ qqplot <- function(data = NULL,
     class(data) == "numeric"|
     class(data) == "double"
   )))
-    return("Must enter a numeric data vector.")
+    stop("Must enter a numeric data vector.")
 
 
   n <- length(data)
@@ -51,6 +54,6 @@ qqplot <- function(data = NULL,
     xlab(xlabel) +
     ylab(ylabel)
   plot
-  return(list(dataset = DataNorm, graph = qqplot))
+  return(list(data = DataNorm, plot = qqplot))
 }
 
