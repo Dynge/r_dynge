@@ -4,11 +4,14 @@
 \alias{qqplot}
 \title{A QQ plot}
 \usage{
-qqplot(data = NULL, type = "normal", ylabel = "Observed Values",
-  xlabel = "Theoretical Quantiles")
+qqplot(Y = NULL, X = NULL, type = "normal",
+  ylabel = "Observed Values", xlabel = "Theoretical Quantiles")
 }
 \arguments{
-\item{data}{The dataset only containing the data coloumns correlations between.}
+\item{Y}{A data vector to plot on the Y axis.}
+
+\item{X}{Additional data vector that will overwrite the normality quantiales that usually go on the X axis.
+Useful to compare distributions of different vectors.}
 
 \item{type}{The type of quantiles. Either "normal" or "t" distributed.}
 
@@ -17,7 +20,7 @@ qqplot(data = NULL, type = "normal", ylabel = "Observed Values",
 \item{xlabel}{The label for the y axis.}
 }
 \value{
-\item{data}{A dataset containing the correlational values aswell as their respective p-values.}
+\item{data}{A dataset containing the vectors used for the plot.}
 \item{plot}{A ggplot object of the plot.}
 }
 \description{
@@ -26,4 +29,7 @@ Produces a QQ plot of your data with either normal or t-distributed quantiles.
 \examples{
 data(mtcars)
 qqplot(mtcars$mpg)
+
+data(mtcars)
+qqplot(mtcars$mpg, mtcars$qsec)
 }
