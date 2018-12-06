@@ -9,7 +9,14 @@ pca_scree(model, type = "cpov")
 \arguments{
 \item{model}{The PCA model from FactoMineR.}
 
-\item{type}{The type of model. This can be one of three: "eig", "pov" or "cpov". Defaults to "cpov".}
+\item{type}{The type of model. This can be one of three: "eig" (eigenvalues),
+"pov" (proportion of variance) or
+"cpov" (cummulative proportion of variance).
+Defaults to "cpov".}
+}
+\value{
+\item{data}{Data used in the plot.}
+\item{plot}{The ggplot object.}
 }
 \description{
 This function constructs a screeplot based on either the eigenvalues, percentage of variance or the cummulative percentage of variance.

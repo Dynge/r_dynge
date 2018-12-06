@@ -13,6 +13,10 @@ pca_loading_circle(model, dim = c(1, 2), min_cor = 0.3)
 
 \item{min_cor}{The minimal correlation value to plot arrow. Defaults to .3.}
 }
+\value{
+\item{loadings}{Data of the variable loadings on the dimensions.}
+\item{plot}{The ggplot object.}
+}
 \description{
 This function creates a unity circle aswell as the correlations between the original
 variables and the principal components of your PCA model. You can choose which dimensions to plot,

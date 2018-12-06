@@ -3,8 +3,13 @@
 #' This function constructs a screeplot based on either the eigenvalues, percentage of variance or the cummulative percentage of variance.
 #' this can be done by adjusting the type variable.
 #' @param model The PCA model from FactoMineR.
-#' @param type The type of model. This can be one of three: "eig", "pov" or "cpov". Defaults to "cpov".
-#'
+#' @param type The type of model. This can be one of three: "eig" (eigenvalues),
+#' "pov" (proportion of variance) or
+#' "cpov" (cummulative proportion of variance).
+#' Defaults to "cpov".
+#' @return
+#' \item{data}{Data used in the plot.}
+#' \item{plot}{The ggplot object.}
 #' @export
 pca_scree <- function(model, type = "cpov") {
   if (!(TRUE %in% (class(model) == "PCA"))) {
@@ -16,11 +21,13 @@ pca_scree <- function(model, type = "cpov") {
     cpov = model$eig[, 3],
     PC = seq_len(nrow(model$eig))
   )
-  ggplot(data, aes(PC, data[[type]])) +
+  plot <- ggplot(data, aes(PC, data[[type]])) +
     geom_point() +
     geom_line() +
     theme_dynge() +
     ylab(type)
+  return(list(data = data,
+              plot = plot))
 }
 
 #' Quality of Representation
@@ -71,6 +78,9 @@ pca_QoR <- function(model, labels = TRUE) {
 #' @param model The PCA model from FactoMineR.
 #' @param dim The dimensions to be plotted. Defaults to c(1,2).
 #' @param min_cor The minimal correlation value to plot arrow. Defaults to .3.
+#' @return
+#' \item{loadings}{Data of the variable loadings on the dimensions.}
+#' \item{plot}{The ggplot object.}
 #' @import ggrepel
 #' @export
 pca_loading_circle <- function(model,
@@ -79,11 +89,11 @@ pca_loading_circle <- function(model,
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
-  loadings <- as.tibble(model$var$coord)
-  loadings$Variable <- rownames(model$var$coord)
-  loadings <- loadings %>%
-    filter(abs(loadings[[dim[1]]]) > min_cor |
-             abs(loadings[[dim[2]]]) > min_cor)
+  loadings_full <- as.tibble(model$var$coord)
+  loadings_full$Variable <- rownames(model$var$coord)
+  loadings <- loadings_full %>%
+    filter(abs(loadings_full[[dim[1]]]) > min_cor |
+             abs(loadings_full[[dim[2]]]) > min_cor)
 
   circleFun <- function(center = c(0, 0),
                         radius = 1,
@@ -120,7 +130,8 @@ pca_loading_circle <- function(model,
       x = paste("Dimension ", dim[1], " (", round(model$eig[dim[1], 2], 1), "%)", sep = ""),
       y = paste("Dimension ", dim[2], " (", round(model$eig[dim[2], 2], 1), "%)", sep = "")
     )
-  return(list(data = loadings, plot = plot))
+  return(list(data = loadings_full,
+              plot = plot))
 
 
 }
@@ -135,6 +146,10 @@ pca_loading_circle <- function(model,
 #' @param dim The dimensions to be plotted. Defaults to c(1,2).
 #' @param min_cor The minimal correlation value to plot arrow. Defaults to .3.
 #' @param biplot A boolean for whether or not to produce a biplot and therefore add correlation arrows. Defaults to TRUE
+#' @return
+#' \item{ind}{Data of the individual coordinates on the dimensions.}
+#' \item{loadings}{Data of the variable loadings on the dimensions.}
+#' \item{plot}{The ggplot object.}
 #' @import ggrepel
 #' @export
 pca_biplot <- function(model,
@@ -180,11 +195,11 @@ pca_biplot <- function(model,
     }
   }
   if (biplot) {
-    loadings <- as.tibble(model$var$coord)
-    loadings$Variable <- rownames(model$var$coord)
-    loadings <- loadings %>%
-      filter(abs(loadings[[dim[1]]]) > min_cor |
-               abs(loadings[[dim[2]]]) > min_cor)
+    loadings_full <- as.tibble(model$var$coord)
+    loadings_full$Variable <- rownames(model$var$coord)
+    loadings <- loadings_full %>%
+      filter(abs(loadings_full[[dim[1]]]) > min_cor |
+               abs(loadings_full[[dim[2]]]) > min_cor)
     loading_arrow <- function() {
       list(
         geom_segment(
@@ -230,7 +245,7 @@ pca_biplot <- function(model,
     )
   return(list(
     ind = data,
-    loadings = loadings,
+    loadings = loadings_full,
     plot = plot
   ))
 

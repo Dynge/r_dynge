@@ -18,6 +18,11 @@ pca_biplot(model, point_id = NULL, dim = c(1, 2), min_cor = 0.3,
 
 \item{biplot}{A boolean for whether or not to produce a biplot and therefore add correlation arrows. Defaults to TRUE}
 }
+\value{
+\item{ind}{Data of the individual coordinates on the dimensions.}
+\item{loadings}{Data of the variable loadings on the dimensions.}
+\item{plot}{The ggplot object.}
+}
 \description{
 This function creates a biplot of the PCA model. You can adjust which dimensions to plot,
 aswell as the threshold for correlations to be shown. You can also forego the correlation arrows with biplot = FALSE.
