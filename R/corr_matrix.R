@@ -33,7 +33,7 @@ corr_matrix <-
     }
     upper_tri <- get_upper_tri(CorrData)
 
-    PValCorr <- Hmisc::rcorr(as.matrix(mtcars), type = type)
+    PValCorr <- Hmisc::rcorr(as.matrix(data), type = type)
     PValCorr <- PValCorr$P
     PVal.upper_tri <- get_upper_tri(PValCorr)
 
