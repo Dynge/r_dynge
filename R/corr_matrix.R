@@ -18,11 +18,7 @@ corr_matrix <-
   function(data = NULL,
            type = "pearson",
            colors = c("steelblue2", "firebrick")) {
-    if (!(TRUE %in% (
-      class(data) == "tbl" |
-      class(data) == "data.frame" |
-      class(data) == "tbl_df"
-    )))
+    if (!is.data.frame(data))
       stop("Must enter a dataset")
 
     CorrData <- round(cor(data, method = type), 2)

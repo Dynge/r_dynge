@@ -24,14 +24,9 @@ qqplot <- function(Y = NULL,
                    type = "normal",
                    ylabel = "Observed Values",
                    xlabel = "Theoretical Quantiles") {
-  if ((TRUE %in% (
-    class(Y) == "tbl" |
-    class(Y) == "data.frame" |
-    class(Y) == "tbl_df"
-  )))
+  if (!is.data.frame(Y))
     Y = unlist(Y, use.names = FALSE)
-  if (!(TRUE %in% (class(Y) == "numeric" |
-                   class(Y) == "double")))
+  if (!is.numeric(Y))
     stop("Must enter a numeric data vector.")
 
 

@@ -120,7 +120,6 @@ pca_loading_circle <- function(model,
         xend = loadings[[dim[1]]],
         yend = loadings[[dim[2]]]
       ),
-      col = "grey60",
       arrow = arrow(length = unit(.25, "cm"), type = "closed")
     ) +
     ggrepel::geom_text_repel(aes(label = Variable),

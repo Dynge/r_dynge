@@ -13,11 +13,7 @@
 #' @export
 cvsplit <- function(train = NULL,
                folds = 10) {
-  if (!(TRUE %in% (
-    class(train) == "tbl" |
-    class(train) == "data.frame" |
-    class(train) == "tbl_df"
-  ))) {
+  if (!is.data.frame(train)) {
     stop("It would seem I have not received a dataset, but something else...")
   }
   if (nrow(train) / folds != as.integer(nrow(train) / folds)) {
