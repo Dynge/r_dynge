@@ -92,7 +92,7 @@ pca_loading_circle <- function(model,
   loadings_full <- as.tibble(model$var$coord)
   loadings_full$Variable <- rownames(model$var$coord)
   loadings <- loadings_full %>%
-    filter(abs(loadings_full[[dim[1]]]) > min_cor |
+    dplyr::filter(abs(loadings_full[[dim[1]]]) > min_cor |
              abs(loadings_full[[dim[2]]]) > min_cor)
 
   circleFun <- function(center = c(0, 0),
@@ -194,11 +194,11 @@ pca_biplot <- function(model,
 
     }
   }
+  loadings_full <- as.tibble(model$var$coord)
+  loadings_full$Variable <- rownames(model$var$coord)
   if (biplot) {
-    loadings_full <- as.tibble(model$var$coord)
-    loadings_full$Variable <- rownames(model$var$coord)
     loadings <- loadings_full %>%
-      filter(abs(loadings_full[[dim[1]]]) > min_cor |
+      dplyr::filter(abs(loadings_full[[dim[1]]]) > min_cor |
                abs(loadings_full[[dim[2]]]) > min_cor)
     loading_arrow <- function() {
       list(
