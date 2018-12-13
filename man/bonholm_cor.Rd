@@ -2,7 +2,7 @@
 % Please edit documentation in R/posthoc.R
 \name{bonholm_cor}
 \alias{bonholm_cor}
-\title{Bonferonni-Holm}
+\title{Bonferonni-Holm Correction}
 \usage{
 bonholm_cor(p_vals, alpha = 0.05)
 }
@@ -14,6 +14,9 @@ bonholm_cor(p_vals, alpha = 0.05)
 \value{
 \item{nSig}{The number of significant results.}
 \item{p_val}{The significant p-values.}
+\item{n}{The amount of p-values corrected. The same as the length of your input vector.}
+\item{data}{A dataset containing the p-values, their respective adjusted alpha level,
+aswell as a boolean indicating if the p-value is significant or not.}
 }
 \description{
 This function computes the bonferroni-holm correction and determines if the p-values
