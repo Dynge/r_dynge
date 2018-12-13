@@ -1,6 +1,6 @@
 Package: dynge
 Title: Dynge's Useful Functions
-Version: 0.0.0.9000
+Version: 1.0
 Authors@R: person("Michael D.", "Lyngs", email = "michael_lyngs@hotmail.com", role = c("aut", "cre"))
 Description: This is a collection of packages that I have found useful in my R adventures.
 Depends: R (>= 3.5.1), tidyverse (>= 1.2.1), RColorBrewer (>= 1.1-2)
