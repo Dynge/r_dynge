@@ -36,18 +36,26 @@ pca_scree <- function(model, type = "cpov") {
 #' their respective quality of representation to the different principal components.
 #' @param model The PCA model from FactoMineR.
 #' @param labels Boolean indicating if values should be plotted or not. Defaults to TRUE.
+#' @param dims A vector of the dimensions you want to include e.g. c(1:5). Defaults to all dimensions in the PCA object.
 #' @return
 #' \item{data}{The data used to make the plot.}
 #' \item{plot}{The ggplot object.}
 #' @export
-pca_QoR <- function(model, labels = TRUE) {
+pca_QoR <- function(model,
+                    labels = TRUE,
+                    dims = "default") {
   if (!(TRUE %in% (class(model) == "PCA"))) {
     stop("You must enter a model of a PCA from the FactoMineR package.")
   }
+  if (length(dims) == 1) {
+    if (dims == "default") {
+      dims <- seq_len(ncol(model$var$cos2))
+    }
+  }
 
-  data <- as.tibble(model$var$cos2)
+  data <- as.tibble(model$var$cos2[, dims])
   data$Variable <- rownames(model$var$coord)
-  data <- gather(data, key = Dimension, value = QoR, -Variable)
+  data <- gather(data, key = Dimension, value = QoR,-Variable)
   if (labels) {
     labeling <- function() {
       geom_text(aes(label = round(QoR, 1)))
@@ -93,7 +101,7 @@ pca_loading_circle <- function(model,
   loadings_full$Variable <- rownames(model$var$coord)
   loadings <- loadings_full %>%
     dplyr::filter(abs(loadings_full[[dim[1]]]) > min_cor |
-             abs(loadings_full[[dim[2]]]) > min_cor)
+                    abs(loadings_full[[dim[2]]]) > min_cor)
 
   circleFun <- function(center = c(0, 0),
                         radius = 1,
@@ -198,7 +206,7 @@ pca_biplot <- function(model,
   if (biplot) {
     loadings <- loadings_full %>%
       dplyr::filter(abs(loadings_full[[dim[1]]]) > min_cor |
-               abs(loadings_full[[dim[2]]]) > min_cor)
+                      abs(loadings_full[[dim[2]]]) > min_cor)
     loading_arrow <- function() {
       list(
         geom_segment(

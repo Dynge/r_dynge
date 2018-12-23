@@ -4,12 +4,14 @@
 \alias{pca_QoR}
 \title{Quality of Representation}
 \usage{
-pca_QoR(model, labels = TRUE)
+pca_QoR(model, labels = TRUE, dims = "default")
 }
 \arguments{
 \item{model}{The PCA model from FactoMineR.}
 
 \item{labels}{Boolean indicating if values should be plotted or not. Defaults to TRUE.}
+
+\item{dims}{A vector of the dimensions you want to include e.g. c(1:5). Defaults to all dimensions in the PCA object.}
 }
 \value{
 \item{data}{The data used to make the plot.}
