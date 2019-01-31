@@ -1,6 +1,3 @@
-colorPal <- brewer.pal(9, "Set1")
-fillPal <- colorPal
-#windowsFonts(Helvetica = windowsFont("Helvetica"))
 back.col <- "grey99"
 
 geom_aes_defaults <- function() {
@@ -46,15 +43,11 @@ theme_dynge <- function() {
       legend.key = element_rect(fill = back.col, colour = "grey70"),
       strip.text.y = element_text(angle = 0),
       strip.background = element_blank(),
-<<<<<<< HEAD
       plot.margin = unit(c(1, 1, .7, .5), "cm"),
       axis.ticks.length = unit(.2, "cm"),
       axis.ticks = element_blank()
-=======
-      plot.margin = unit(c(1, 1, .7, .5), "cm")
->>>>>>> acf08402d72f8ec254fa4e58b4442328a6e62efb
     ),
-    scale_fill_manual(values = colorPal),
-    scale_color_manual(values = fillPal)
+    scale_fill_grey(),
+    scale_color_grey()
   )
 }

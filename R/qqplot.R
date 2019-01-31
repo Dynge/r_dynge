@@ -47,11 +47,7 @@ qqplot <- function(Y = NULL,
         fun = function(x)
           x * sd(Y) + mean(Y),
         col = "red",
-<<<<<<< HEAD
-        size = 3
-=======
         size = 1
->>>>>>> acf08402d72f8ec254fa4e58b4442328a6e62efb
       )
     }
   } else {
@@ -59,12 +55,8 @@ qqplot <- function(Y = NULL,
     linefunc <- function() {
       geom_smooth(method = "lm",
                   se = FALSE,
-<<<<<<< HEAD
                   col = "red",
                   size = 3)
-=======
-                  col = "red")
->>>>>>> acf08402d72f8ec254fa4e58b4442328a6e62efb
 
     }
   }
@@ -72,11 +64,7 @@ qqplot <- function(Y = NULL,
   plotdata = tibble(X = X, Y = sorted_Y)
 
   qqplot <- ggplot(plotdata, aes(X, Y)) +
-<<<<<<< HEAD
     geom_point(pch = 1, size = 6, alpha = .5) +
-=======
-    geom_point(pch = 1, size = 3) +
->>>>>>> acf08402d72f8ec254fa4e58b4442328a6e62efb
     linefunc() +
     theme_dynge() +
     xlab(xlabel) +
