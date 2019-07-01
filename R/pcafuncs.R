@@ -220,7 +220,7 @@ pca_biplot <- function(model,
           col = "grey60",
           arrow = arrow(length = unit(.15, "cm"), type = "closed")
         ),
-        geom_text_repel(
+        ggrepel::geom_text_repel(
           data = loadings,
           aes(loadings[[dim[1]]],
               loadings[[dim[2]]],
