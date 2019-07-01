@@ -89,7 +89,6 @@ pca_QoR <- function(model,
 #' @return
 #' \item{loadings}{Data of the variable loadings on the dimensions.}
 #' \item{plot}{The ggplot object.}
-#' @import 
 #' @export
 pca_loading_circle <- function(model,
                                dim = c(1, 2),
@@ -157,7 +156,6 @@ pca_loading_circle <- function(model,
 #' \item{ind}{Data of the individual coordinates on the dimensions.}
 #' \item{loadings}{Data of the variable loadings on the dimensions.}
 #' \item{plot}{The ggplot object.}
-#' @import  
 #' @export
 pca_biplot <- function(model,
                        point_id = NULL,

@@ -9,7 +9,6 @@
 #'
 #' @example
 #' Mode(mtcars$cyl)
-#'
 #' @export
 Mode <-
   function(vector) {
