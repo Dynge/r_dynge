@@ -89,7 +89,7 @@ pca_QoR <- function(model,
 #' @return
 #' \item{loadings}{Data of the variable loadings on the dimensions.}
 #' \item{plot}{The ggplot object.}
-#' @import ggrepel
+#' @import 
 #' @export
 pca_loading_circle <- function(model,
                                dim = c(1, 2),
@@ -130,7 +130,7 @@ pca_loading_circle <- function(model,
       ),
       arrow = arrow(length = unit(.25, "cm"), type = "closed")
     ) +
-    ggrepel::geom_text_repel(aes(label = Variable),
+    geom_text(aes(label = Variable),
                              col = "grey60") +
     theme_dynge() +
     labs(
@@ -157,7 +157,7 @@ pca_loading_circle <- function(model,
 #' \item{ind}{Data of the individual coordinates on the dimensions.}
 #' \item{loadings}{Data of the variable loadings on the dimensions.}
 #' \item{plot}{The ggplot object.}
-#' @import ggrepel
+#' @import  
 #' @export
 pca_biplot <- function(model,
                        point_id = NULL,
@@ -193,7 +193,7 @@ pca_biplot <- function(model,
     }
     data$id <- point_id
     text_id <- function() {
-      ggrepel::geom_text_repel(aes(label = id), col = "grey75")
+      geom_text(aes(label = id), col = "grey75")
     }
 
   } else {
@@ -220,7 +220,7 @@ pca_biplot <- function(model,
           col = "grey60",
           arrow = arrow(length = unit(.15, "cm"), type = "closed")
         ),
-        ggrepel::geom_text_repel(
+        geom_text(
           data = loadings,
           aes(loadings[[dim[1]]],
               loadings[[dim[2]]],
